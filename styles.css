@@ -1,13 +1,89 @@
-/* 侧边栏主容器 */
+/* ===== 颜色变量：亮色模式（默认） ===== */
+:root {
+    --sidebar-bg: #f9f9f9;
+    --sidebar-border: #e5e5e5;
+    --sidebar-shadow: rgba(0, 0, 0, 0.05);
+
+    --header-bg: #ffffff;
+    --header-border: #e5e5e5;
+    --title-color: #888888;
+
+    --card-bg: #ffffff;
+    --card-border: #e5e5e5;
+    --card-shadow: rgba(0, 0, 0, 0.02);
+    --card-hover-bg: #f0f0f0;
+    --card-hover-border: #cccccc;
+
+    --prompt-index-color: #aaaaaa;
+    --prompt-text-color: #333333;
+    --footer-color: #888888;
+    --branch-bg: #f5f5f5;
+
+    --scrollbar-thumb: #cccccc;
+
+    --float-btn-bg: rgba(255, 255, 255, 0.75);
+    --float-btn-hover-bg: rgba(255, 255, 255, 0.95);
+    --float-btn-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --float-btn-hover-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+    --float-btn-active-bg: rgba(59, 130, 246, 0.15);
+    --float-btn-active-shadow: 0 2px 10px rgba(59, 130, 246, 0.2);
+    --float-btn-stroke: #666666;
+
+    --outline-item-color: #555555;
+    --outline-level0-color: #333333;
+    --outline-resize-border: #dddddd;
+    --outline-resize-bg: rgba(255, 255, 255, 0.8);
+    --outline-resize-color: #888888;
+}
+
+/* ===== 颜色变量：深色模式 ===== */
+html.dark {
+    --sidebar-bg: #212121;
+    --sidebar-border: #3a3a3a;
+    --sidebar-shadow: rgba(0, 0, 0, 0.25);
+
+    --header-bg: #1a1a1a;
+    --header-border: #3a3a3a;
+    --title-color: #a0a0a0;
+
+    --card-bg: #2a2a2a;
+    --card-border: #3a3a3a;
+    --card-shadow: rgba(0, 0, 0, 0.12);
+    --card-hover-bg: #353535;
+    --card-hover-border: #555555;
+
+    --prompt-index-color: #777777;
+    --prompt-text-color: #e0e0e0;
+    --footer-color: #999999;
+    --branch-bg: #333333;
+
+    --scrollbar-thumb: #555555;
+
+    --float-btn-bg: rgba(50, 50, 50, 0.85);
+    --float-btn-hover-bg: rgba(65, 65, 65, 0.95);
+    --float-btn-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --float-btn-hover-shadow: 0 3px 12px rgba(0, 0, 0, 0.45);
+    --float-btn-active-bg: rgba(59, 130, 246, 0.25);
+    --float-btn-active-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
+    --float-btn-stroke: #b0b0b0;
+
+    --outline-item-color: #b0b0b0;
+    --outline-level0-color: #e0e0e0;
+    --outline-resize-border: #555555;
+    --outline-resize-bg: rgba(50, 50, 50, 0.8);
+    --outline-resize-color: #aaaaaa;
+}
+
+/* ===== 侧边栏主容器 ===== */
 #gpt-prompt-sidebar {
     position: fixed;
     top: 0;
     right: 0;
     height: 100vh;
     width: 320px;
-    background-color: #f9f9f9;
-    border-left: 1px solid #e5e5e5;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
+    background-color: var(--sidebar-bg);
+    border-left: 1px solid var(--sidebar-border);
+    box-shadow: -2px 0 10px var(--sidebar-shadow);
     z-index: 99999;
     transition: width 0.2s ease;
     overflow: hidden;
@@ -19,7 +95,7 @@
     box-shadow: none;
 }
 
-/* 悬浮控制按钮组 */
+/* ===== 悬浮控制按钮组 ===== */
 #gpt-float-controls {
     position: fixed;
     top: 50%;
@@ -37,9 +113,9 @@
     height: 40px;
     border-radius: 50%;
     border: none;
-    background: rgba(255, 255, 255, 0.75);
+    background: var(--float-btn-bg);
     backdrop-filter: blur(8px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--float-btn-shadow);
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -49,8 +125,8 @@
 }
 
 .gpt-float-btn:hover {
-    background: rgba(255, 255, 255, 0.95);
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.16);
+    background: var(--float-btn-hover-bg);
+    box-shadow: var(--float-btn-hover-shadow);
     transform: scale(1.08);
 }
 
@@ -59,8 +135,8 @@
 }
 
 .gpt-float-btn.active {
-    background: rgba(59, 130, 246, 0.15);
-    box-shadow: 0 2px 10px rgba(59, 130, 246, 0.2);
+    background: var(--float-btn-active-bg);
+    box-shadow: var(--float-btn-active-shadow);
 }
 
 .gpt-float-btn.active svg {
@@ -70,29 +146,29 @@
 .gpt-float-btn svg {
     width: 20px;
     height: 20px;
-    stroke: #666;
+    stroke: var(--float-btn-stroke);
 }
 
-/* 顶部区域容器 */
+/* ===== 顶部区域容器 ===== */
 #gpt-sidebar-header {
     height: 50px;
     width: 320px;
     display: flex;
     align-items: center;
     padding-left: 15px;
-    border-bottom: 1px solid #e5e5e5;
-    background-color: #ffffff;
+    border-bottom: 1px solid var(--header-border);
+    background-color: var(--header-bg);
     box-sizing: border-box;
 }
 
-/* 顶部标题 */
+/* ===== 顶部标题 ===== */
 #gpt-sidebar-title {
-    color: #888888;
+    color: var(--title-color);
     font-size: 14px;
     font-weight: 500;
 }
 
-/* 提示词列表区域 */
+/* ===== 提示词列表区域 ===== */
 #gpt-prompt-list {
     width: 320px;
     height: calc(100vh - 50px);
@@ -104,32 +180,30 @@
     gap: 15px;
 }
 
-/* 单个提示词卡片 */
+/* ===== 单个提示词卡片 ===== */
 .gpt-prompt-card {
-    background-color: #ffffff;
+    background-color: var(--card-bg);
     border-radius: 10px;
     padding: 12px;
-    border: 1px solid #e5e5e5;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 1px 3px var(--card-shadow);
     cursor: pointer;
     transition: background-color 0.2s, border-color 0.2s;
 }
 
 .gpt-prompt-card:hover {
-    background-color: #f0f0f0;
-    border-color: #cccccc;
+    background-color: var(--card-hover-bg);
+    border-color: var(--card-hover-border);
 }
 
-/* 卡片顶部：序号 */
 .gpt-prompt-header {
-    color: #aaaaaa;
+    color: var(--prompt-index-color);
     font-size: 12px;
     margin-bottom: 5px;
 }
 
-/* 卡片内容：提示词文本 */
 .gpt-prompt-text {
-    color: #333333;
+    color: var(--prompt-text-color);
     font-size: 13px;
     line-height: 1.5;
     word-break: break-word;
@@ -139,18 +213,17 @@
     overflow: hidden;
 }
 
-/* 卡片底部：分支信息 */
 .gpt-prompt-footer {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-    color: #888888;
+    color: var(--footer-color);
     font-size: 12px;
 }
 
 .gpt-prompt-branch {
-    background-color: #f5f5f5;
+    background-color: var(--branch-bg);
     padding: 2px 8px;
     border-radius: 12px;
 }
@@ -160,11 +233,11 @@
 }
 
 #gpt-prompt-list::-webkit-scrollbar-thumb {
-    background: #cccccc;
+    background: var(--scrollbar-thumb);
     border-radius: 3px;
 }
 
-/* ========== 大纲导航面板 ========== */
+/* ===== 大纲导航面板 ===== */
 #gpt-outline-panel {
     position: fixed;
     left: 16px;
@@ -200,7 +273,7 @@
 .gpt-outline-item {
     padding: 4px 12px;
     font-size: 12px;
-    color: #555;
+    color: var(--outline-item-color);
     line-height: 1.5;
     cursor: pointer;
     white-space: nowrap;
@@ -217,7 +290,7 @@
 
 .gpt-outline-level-0 {
     font-weight: 500;
-    color: #333;
+    color: var(--outline-level0-color);
 }
 
 #gpt-outline-resize {
@@ -230,15 +303,15 @@
     width: 22px;
     height: 22px;
     border-radius: 4px;
-    border: 1px solid #ddd;
-    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--outline-resize-border);
+    background: var(--outline-resize-bg);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 14px;
     font-weight: 500;
-    color: #888;
+    color: var(--outline-resize-color);
     padding: 0;
     line-height: 1;
     transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -253,4 +326,3 @@
 .gpt-outline-resize-btn:active {
     transform: scale(0.9);
 }
-

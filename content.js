@@ -107,14 +107,14 @@ outlineToggleBtn.addEventListener('click', (event) => {
 
 outlineShrink.addEventListener('click', (e) => {
     e.stopPropagation();
-    _outlineWidthPercent = Math.max(OUTLINE_WIDTH_MIN, _outlineWidthPercent - 3);
+    _outlineWidthPercent = Math.max(OUTLINE_WIDTH_MIN, _outlineWidthPercent - 1);
     localStorage.setItem(OUTLINE_WIDTH_KEY, String(_outlineWidthPercent));
     updatePositions();
 });
 
 outlineGrow.addEventListener('click', (e) => {
     e.stopPropagation();
-    _outlineWidthPercent = Math.min(OUTLINE_WIDTH_MAX, _outlineWidthPercent + 3);
+    _outlineWidthPercent = Math.min(OUTLINE_WIDTH_MAX, _outlineWidthPercent + 1);
     localStorage.setItem(OUTLINE_WIDTH_KEY, String(_outlineWidthPercent));
     updatePositions();
 });
