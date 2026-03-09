@@ -4,6 +4,10 @@
 
 目前项目仅适配 `ChatGPT`，后续计划逐步扩展到更多 AI 对话网站。
 
+## 演示
+
+![LLM_Chat_Navigator 演示图](docs/images/demo.png)
+
 ## 功能
 
 - **Prompt 侧边栏**：以卡片形式列出当前对话中的所有用户提问，显示序号和内容预览
