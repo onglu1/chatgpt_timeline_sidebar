@@ -9,7 +9,7 @@
     border-left: 1px solid #e5e5e5;
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
     z-index: 99999;
-    transition: width 0.2s ease;
+    transition: width 0.2s ease, right 0.2s ease;
     overflow: hidden;
 }
 
@@ -19,7 +19,7 @@
     box-shadow: none;
 }
 
-/* 悬浮控制按钮组（无背景，竖排） */
+/* 悬浮控制按钮组 */
 #gpt-float-controls {
     position: fixed;
     top: 50%;
@@ -31,10 +31,6 @@
     gap: 10px;
     z-index: 100000;
     transition: right 0.2s ease;
-}
-
-#gpt-prompt-sidebar:not(.collapsed) ~ #gpt-float-controls {
-    right: 332px;
 }
 
 .gpt-float-btn {
@@ -160,24 +156,133 @@
     border-radius: 12px;
 }
 
-body > div:not(#gpt-prompt-sidebar) {
-    max-width: 100vw;
-    transition: max-width 0.2s ease;
-}
-
-body.gpt-sidebar-open > div:not(#gpt-prompt-sidebar) {
-    max-width: calc(100vw - 320px) !important;
-}
-
-body.gpt-sidebar-open {
-    overflow-x: hidden !important;
-}
-
-/* 隐藏滚动条 */
 #gpt-prompt-list::-webkit-scrollbar {
     width: 6px;
 }
+
 #gpt-prompt-list::-webkit-scrollbar-thumb {
     background: #cccccc;
     border-radius: 3px;
+}
+
+/* ========== 大纲导航面板 ========== */
+#gpt-outline-panel {
+    position: fixed;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 99998;
+    opacity: 0.35;
+    transition: opacity 0.3s ease, left 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#gpt-outline-panel:hover {
+    opacity: 1;
+}
+
+#gpt-outline-panel.hidden {
+    display: none;
+}
+
+#gpt-outline-list {
+    width: 180px;
+    max-height: calc(70vh - 30px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+}
+
+#gpt-outline-list::-webkit-scrollbar {
+    display: none;
+}
+
+.gpt-outline-item {
+    padding: 4px 12px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.5;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-left: 2px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.gpt-outline-item:hover {
+    color: #3b82f6;
+    border-left-color: #3b82f6;
+}
+
+.gpt-outline-level-0 {
+    font-weight: 500;
+    color: #333;
+}
+
+/* 大纲底部眼睛图标 */
+#gpt-outline-eye {
+    margin-top: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    color: #aaa;
+}
+
+#gpt-outline-eye:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: #666;
+}
+
+#gpt-outline-eye svg {
+    stroke: currentColor;
+}
+
+/* ========== 大纲折叠模式：横线替代文字 ========== */
+#gpt-outline-panel.outline-collapsed #gpt-outline-list {
+    width: auto;
+}
+
+#gpt-outline-panel.outline-collapsed .gpt-outline-item {
+    font-size: 0;
+    line-height: 0;
+    padding: 0 !important;
+    margin: 5px 0;
+    height: 2px;
+    width: 12px;
+    border-radius: 1px;
+    background-color: #aaa;
+    border-left: none;
+    white-space: normal;
+    overflow: visible;
+    transition: background-color 0.15s ease;
+}
+
+#gpt-outline-panel.outline-collapsed .gpt-outline-item:hover {
+    background-color: #3b82f6;
+    border-left: none;
+}
+
+#gpt-outline-panel.outline-collapsed .gpt-outline-level-0 {
+    width: 40px;
+    background-color: #888;
+}
+
+#gpt-outline-panel.outline-collapsed .gpt-outline-level-1 {
+    width: 30px;
+}
+
+#gpt-outline-panel.outline-collapsed .gpt-outline-level-2 {
+    width: 22px;
+}
+
+#gpt-outline-panel.outline-collapsed .gpt-outline-level-3 {
+    width: 16px;
 }

@@ -16,7 +16,6 @@ const promptList = document.createElement('div');
 promptList.id = 'gpt-prompt-list';
 sidebar.appendChild(promptList);
 
-// 悬浮按钮组容器（无背景，竖排）
 const floatControls = document.createElement('div');
 floatControls.id = 'gpt-float-controls';
 
@@ -38,19 +37,64 @@ downBtn.id = 'gpt-nav-down';
 downBtn.title = '下一个 Prompt';
 downBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
 
+const outlineToggleBtn = document.createElement('button');
+outlineToggleBtn.className = 'gpt-float-btn active';
+outlineToggleBtn.id = 'gpt-outline-toggle';
+outlineToggleBtn.title = '显示/隐藏大纲';
+outlineToggleBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>`;
+
 floatControls.appendChild(toggleBtn);
 floatControls.appendChild(upBtn);
 floatControls.appendChild(downBtn);
+floatControls.appendChild(outlineToggleBtn);
+
+const outlinePanel = document.createElement('div');
+outlinePanel.id = 'gpt-outline-panel';
+outlinePanel.className = 'hidden';
+
+const outlineList = document.createElement('div');
+outlineList.id = 'gpt-outline-list';
+outlinePanel.appendChild(outlineList);
+
+const outlineEye = document.createElement('div');
+outlineEye.id = 'gpt-outline-eye';
+outlineEye.title = '折叠/展开大纲';
+outlineEye.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+outlinePanel.appendChild(outlineEye);
 
 document.body.appendChild(sidebar);
 document.body.appendChild(floatControls);
+document.body.appendChild(outlinePanel);
 
-// 展开/折叠侧边栏
+let outlineVisible = true;
+let outlineCollapsed = false;
+
 toggleBtn.addEventListener('click', (event) => {
     event.stopPropagation();
-    const isCollapsed = sidebar.classList.toggle('collapsed');
-    document.body.classList.toggle('gpt-sidebar-open', !isCollapsed);
-    toggleBtn.classList.toggle('active', !isCollapsed);
+    sidebar.classList.toggle('collapsed');
+    toggleBtn.classList.toggle('active', !sidebar.classList.contains('collapsed'));
+    updatePositions();
+});
+
+outlineToggleBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    outlineVisible = !outlineVisible;
+    outlineToggleBtn.classList.toggle('active', outlineVisible);
+    if (!outlineVisible) {
+        outlinePanel.classList.add('hidden');
+    } else {
+        updateOutline();
+    }
+});
+
+outlineEye.addEventListener('click', () => {
+    outlineCollapsed = !outlineCollapsed;
+    outlinePanel.classList.toggle('outline-collapsed', outlineCollapsed);
+    if (outlineCollapsed) {
+        outlineEye.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+    } else {
+        outlineEye.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+    }
 });
 
 function getScrollContainer(element) {
@@ -102,9 +146,6 @@ function fastScrollTo(targetElement) {
     requestAnimationFrame(animation);
 }
 
-// 判断当前正在阅读的 prompt 索引
-// 方法：页面顶部所处的区块即为正在阅读的区块。
-// 找最后一个 turn 顶部已滚过视口顶部的 prompt。
 function getCurrentPromptIndex() {
     const messages = document.querySelectorAll('[data-message-author-role="user"]');
     if (messages.length === 0) return -1;
@@ -130,8 +171,6 @@ function getCurrentPromptIndex() {
     return currentIndex;
 }
 
-// 向上：如果当前在某个 prompt 内容中间，先回到该 prompt 顶部；
-// 如果已经在顶部附近，才跳到上一个 prompt（类似音乐播放器"上一曲"逻辑）。
 upBtn.addEventListener('click', (event) => {
     event.stopPropagation();
     const messages = document.querySelectorAll('[data-message-author-role="user"]');
@@ -148,8 +187,6 @@ upBtn.addEventListener('click', (event) => {
         : scrollContainer.getBoundingClientRect().top;
     const turnTop = turn.getBoundingClientRect().top;
 
-    // 当前 prompt 顶部距视口顶部 < 100px，说明已经在这个 prompt 的开头附近，跳到上一个
-    // 否则说明还在这个 prompt 的内容中间，先回到这个 prompt 顶部
     if (turnTop > viewTop - 100) {
         fastScrollTo(messages[Math.max(0, currentIndex - 1)]);
     } else {
@@ -157,7 +194,6 @@ upBtn.addEventListener('click', (event) => {
     }
 });
 
-// 向下：始终跳到下一个 Prompt
 downBtn.addEventListener('click', (event) => {
     event.stopPropagation();
     const messages = document.querySelectorAll('[data-message-author-role="user"]');
@@ -167,6 +203,25 @@ downBtn.addEventListener('click', (event) => {
     const targetIndex = Math.min(messages.length - 1, currentIndex + 1);
     fastScrollTo(messages[targetIndex]);
 });
+
+function updatePositions() {
+    const main = document.querySelector('main#main') || document.querySelector('main');
+    if (!main) return;
+    const rect = main.getBoundingClientRect();
+
+    outlinePanel.style.left = `${Math.max(8, rect.left + 16)}px`;
+
+    const sidebarRight = Math.max(0, window.innerWidth - rect.right);
+    sidebar.style.right = `${sidebarRight}px`;
+
+    if (sidebar.classList.contains('collapsed')) {
+        floatControls.style.right = `${sidebarRight + 16}px`;
+    } else {
+        floatControls.style.right = `${sidebarRight + 320 + 12}px`;
+    }
+}
+
+window.addEventListener('resize', updatePositions);
 
 function extractPrompts() {
     promptList.innerHTML = '';
@@ -215,5 +270,92 @@ function extractPrompts() {
     });
 }
 
-setInterval(extractPrompts, 2000);
-setTimeout(extractPrompts, 1000);
+function getCurrentAssistantResponse() {
+    const messages = document.querySelectorAll('[data-message-author-role="user"]');
+    if (messages.length === 0) return null;
+    const currentIndex = getCurrentPromptIndex();
+    if (currentIndex < 0) return null;
+
+    const userMsg = messages[currentIndex];
+    const userTurn = userMsg.closest('[data-testid^="conversation-turn"]')
+        || userMsg.closest('article')
+        || userMsg;
+
+    let sibling = userTurn.nextElementSibling;
+    while (sibling) {
+        const assistant = sibling.querySelector('[data-message-author-role="assistant"]');
+        if (assistant) return assistant;
+        if (sibling.querySelector('[data-message-author-role="user"]')) break;
+        sibling = sibling.nextElementSibling;
+    }
+    return null;
+}
+
+function updateOutline() {
+    if (!outlineVisible) {
+        outlinePanel.classList.add('hidden');
+        return;
+    }
+
+    const assistantMsg = getCurrentAssistantResponse();
+    if (!assistantMsg) {
+        outlinePanel.classList.add('hidden');
+        return;
+    }
+
+    const headings = assistantMsg.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    if (headings.length === 0) {
+        outlinePanel.classList.add('hidden');
+        return;
+    }
+
+    let minLevel = 6;
+    headings.forEach(h => {
+        const lvl = parseInt(h.tagName[1]);
+        if (lvl < minLevel) minLevel = lvl;
+    });
+
+    outlinePanel.classList.remove('hidden');
+    outlineList.innerHTML = '';
+
+    headings.forEach(heading => {
+        const level = parseInt(heading.tagName[1]);
+        const rel = level - minLevel;
+
+        const item = document.createElement('div');
+        item.className = `gpt-outline-item gpt-outline-level-${rel}`;
+        item.style.paddingLeft = `${rel * 14 + 10}px`;
+        item.innerText = heading.textContent;
+        item.title = heading.textContent;
+        item.addEventListener('click', () => fastScrollTo(heading));
+        outlineList.appendChild(item);
+    });
+}
+
+let _outlineTimer = null;
+let _outlineScrollEl = null;
+
+function _onOutlineScroll() {
+    if (_outlineTimer) clearTimeout(_outlineTimer);
+    _outlineTimer = setTimeout(updateOutline, 200);
+}
+
+function attachOutlineScroll() {
+    const msgs = document.querySelectorAll('[data-message-author-role="user"]');
+    if (msgs.length === 0) return;
+    const el = getScrollContainer(msgs[0]);
+    if (el === _outlineScrollEl) return;
+    if (_outlineScrollEl) _outlineScrollEl.removeEventListener('scroll', _onOutlineScroll);
+    _outlineScrollEl = el;
+    _outlineScrollEl.addEventListener('scroll', _onOutlineScroll, { passive: true });
+}
+
+function refreshAll() {
+    extractPrompts();
+    updateOutline();
+    attachOutlineScroll();
+    updatePositions();
+}
+
+setInterval(refreshAll, 2000);
+setTimeout(refreshAll, 1000);
