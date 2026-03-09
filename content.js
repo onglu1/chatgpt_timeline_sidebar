@@ -350,12 +350,75 @@ function attachOutlineScroll() {
     _outlineScrollEl.addEventListener('scroll', _onOutlineScroll, { passive: true });
 }
 
-function refreshAll() {
-    extractPrompts();
-    updateOutline();
-    attachOutlineScroll();
-    updatePositions();
+// === Reactive refresh system (MutationObserver) ===
+
+let _mainObserver = null;
+let _observedMain = null;
+let _refreshTimer = null;
+let _lastMessageCount = 0;
+let _lastUrl = location.href;
+
+function scheduleRefresh(delay = 150) {
+    clearTimeout(_refreshTimer);
+    _refreshTimer = setTimeout(() => {
+        const messages = document.querySelectorAll('[data-message-author-role="user"]');
+        const count = messages.length;
+
+        if (count !== _lastMessageCount) {
+            _lastMessageCount = count;
+            extractPrompts();
+        }
+
+        updateOutline();
+        attachOutlineScroll();
+        updatePositions();
+    }, delay);
 }
 
-setInterval(refreshAll, 2000);
-setTimeout(refreshAll, 1000);
+function connectObserver() {
+    const main = document.querySelector('main');
+    if (!main) return false;
+    if (main === _observedMain && _mainObserver) return true;
+
+    if (_mainObserver) _mainObserver.disconnect();
+
+    _mainObserver = new MutationObserver(() => scheduleRefresh());
+    _mainObserver.observe(main, {
+        childList: true,
+        subtree: true,
+        characterData: true,
+    });
+    _observedMain = main;
+    return true;
+}
+
+function ensureConnection() {
+    if (location.href !== _lastUrl) {
+        _lastUrl = location.href;
+        _lastMessageCount = 0;
+        if (_mainObserver) _mainObserver.disconnect();
+        _observedMain = null;
+    }
+
+    if (_observedMain && !document.contains(_observedMain)) {
+        if (_mainObserver) _mainObserver.disconnect();
+        _observedMain = null;
+    }
+
+    const main = document.querySelector('main');
+    if (!_observedMain || _observedMain !== main) {
+        if (connectObserver()) {
+            scheduleRefresh(0);
+        }
+    }
+}
+
+(function init() {
+    if (connectObserver()) {
+        scheduleRefresh(0);
+    } else {
+        setTimeout(init, 500);
+    }
+})();
+
+setInterval(ensureConnection, 3000);
