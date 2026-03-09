@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "ChatGPT ScrollMap",
+    "name": "LLM_Chat_Navigator",
     "version": "1.1",
-    "description": "ChatGPT 导航增强：Prompt 侧边栏、回复大纲及快速跳转",
+    "description": "大模型对话导航增强插件，针对模型生成超长回答的场景，提供侧边栏、大纲与快速跳转",
     "content_scripts": [
         {
             "matches": [

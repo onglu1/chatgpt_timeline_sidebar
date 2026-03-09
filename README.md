@@ -1,6 +1,8 @@
-# ChatGPT ScrollMap
+# LLM_Chat_Navigator
 
-`ChatGPT ScrollMap` 是一个面向长对话场景的 ChatGPT 阅读与跳转增强插件。它会在页面中提供 Prompt 侧边栏、上下快速导航和当前回复大纲，帮助你更高效地浏览、定位和回看整段对话内容。
+`LLM_Chat_Navigator` 是一个面向长对话场景的 AI 对话阅读与跳转增强插件。它会在页面中提供 Prompt 侧边栏、上下快速导航和当前回复大纲，帮助你更高效地浏览、定位和回看整段对话内容。
+
+目前项目仅适配 `ChatGPT`，后续计划逐步扩展到更多 AI 对话网站。
 
 ## 功能
 
@@ -16,7 +18,19 @@
 
 ## 使用
 
-安装后访问 [chatgpt.com](https://chatgpt.com)，页面会提供一组阅读导航控件：
+安装后访问 [chatgpt.com](https://chatgpt.com)，页面会提供一组阅读导航控件。
+
+当前支持站点：
+
+- `ChatGPT`
+
+后续计划适配：
+
+- `Gemini`
+- `Claude`
+- 其他主流 AI / LLM 对话网站
+
+已支持站点中的页面会提供以下控件：
 
 | 控件 | 功能 |
 |------|------|
