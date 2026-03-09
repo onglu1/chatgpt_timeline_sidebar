@@ -8,7 +8,7 @@
  * - Assistant responses: <model-response> → <message-content> → .markdown.markdown-main-panel
  * - Scroll container:    #chat-history (.chat-history-scroll-container)
  * - Content area:        chat-window / .chat-container
- * - Dark mode:           html[dark]
+ * - Dark mode:           body.dark-theme (on <body class="theme-host dark-theme ...">)
  */
 
 window.__LLM_NAV_ADAPTER = {
