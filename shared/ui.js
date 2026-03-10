@@ -49,10 +49,17 @@ outlineToggleBtn.id = 'gpt-outline-toggle';
 outlineToggleBtn.title = '显示/隐藏大纲';
 outlineToggleBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>`;
 
+const formulaBtn = document.createElement('button');
+formulaBtn.className = 'gpt-float-btn';
+formulaBtn.id = 'gpt-formula-btn';
+formulaBtn.title = '公式复制设置';
+formulaBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 4 6 4 12 12 6 20 18 20"/></svg>`;
+
 floatControls.appendChild(toggleBtn);
 floatControls.appendChild(upBtn);
 floatControls.appendChild(downBtn);
 floatControls.appendChild(outlineToggleBtn);
+floatControls.appendChild(formulaBtn);
 
 const outlinePanel = document.createElement('div');
 outlinePanel.id = 'gpt-outline-panel';
@@ -103,9 +110,83 @@ outlineControls.appendChild(widthRow);
 outlineControls.appendChild(levelRow);
 outlinePanel.appendChild(outlineControls);
 
+// ===== 公式复制设置面板 =====
+
+const formulaPanel = document.createElement('div');
+formulaPanel.id = 'gpt-formula-panel';
+formulaPanel.className = 'hidden';
+
+const formulaPanelTitle = document.createElement('div');
+formulaPanelTitle.className = 'gpt-formula-panel-title';
+formulaPanelTitle.textContent = 'Formula Copy';
+formulaPanel.appendChild(formulaPanelTitle);
+
+const formulaToggleRow = document.createElement('div');
+formulaToggleRow.className = 'gpt-formula-row';
+
+const formulaToggleLabel = document.createElement('span');
+formulaToggleLabel.className = 'gpt-formula-label';
+formulaToggleLabel.textContent = '启用公式复制';
+
+const formulaToggle = document.createElement('label');
+formulaToggle.className = 'gpt-formula-switch';
+
+const formulaToggleInput = document.createElement('input');
+formulaToggleInput.type = 'checkbox';
+formulaToggleInput.id = 'gpt-formula-enabled';
+
+const formulaToggleSlider = document.createElement('span');
+formulaToggleSlider.className = 'gpt-formula-slider';
+
+formulaToggle.appendChild(formulaToggleInput);
+formulaToggle.appendChild(formulaToggleSlider);
+formulaToggleRow.appendChild(formulaToggleLabel);
+formulaToggleRow.appendChild(formulaToggle);
+formulaPanel.appendChild(formulaToggleRow);
+
+const formulaDivider = document.createElement('div');
+formulaDivider.className = 'gpt-formula-divider';
+formulaPanel.appendChild(formulaDivider);
+
+const formulaFormatTitle = document.createElement('div');
+formulaFormatTitle.className = 'gpt-formula-subtitle';
+formulaFormatTitle.textContent = '复制格式';
+formulaPanel.appendChild(formulaFormatTitle);
+
+const formulaFormatGroup = document.createElement('div');
+formulaFormatGroup.className = 'gpt-formula-format-group';
+
+const _formulaFormatOptions = [
+    { value: 'latex', label: 'LaTeX  ($…$)' },
+    { value: 'raw', label: 'LaTeX  (raw)' },
+    { value: 'mathml', label: 'MathML' },
+];
+
+_formulaFormatOptions.forEach(opt => {
+    const row = document.createElement('label');
+    row.className = 'gpt-formula-format-option';
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'gpt-formula-format';
+    radio.value = opt.value;
+    const text = document.createElement('span');
+    text.textContent = opt.label;
+    row.appendChild(radio);
+    row.appendChild(text);
+    formulaFormatGroup.appendChild(row);
+});
+
+formulaPanel.appendChild(formulaFormatGroup);
+
+const formulaHint = document.createElement('div');
+formulaHint.className = 'gpt-formula-hint';
+formulaHint.textContent = '启用后点击页面中的公式即可复制';
+formulaPanel.appendChild(formulaHint);
+
 document.body.appendChild(sidebar);
 document.body.appendChild(floatControls);
 document.body.appendChild(outlinePanel);
+document.body.appendChild(formulaPanel);
 
 let outlineVisible = true;
 const OUTLINE_WIDTH_KEY = 'gpt-outline-width-pct';

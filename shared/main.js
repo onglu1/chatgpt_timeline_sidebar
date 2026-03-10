@@ -11,6 +11,50 @@
         return;
     }
 
+    // === 公式复制初始化 ===
+
+    formulaToggleInput.checked = getFormulaCopyEnabled();
+    formulaBtn.classList.toggle('active', getFormulaCopyEnabled());
+
+    const savedFormat = getFormulaCopyFormat();
+    formulaPanel.querySelectorAll('input[name="gpt-formula-format"]').forEach(radio => {
+        radio.checked = (radio.value === savedFormat);
+    });
+
+    initFormulaCopy();
+
+    formulaBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const isHidden = formulaPanel.classList.contains('hidden');
+        if (isHidden) {
+            const btnRect = formulaBtn.getBoundingClientRect();
+            formulaPanel.style.top = `${btnRect.top - 40}px`;
+            formulaPanel.style.right = `${window.innerWidth - btnRect.left + 12}px`;
+            formulaPanel.classList.remove('hidden');
+        } else {
+            formulaPanel.classList.add('hidden');
+        }
+    });
+
+    formulaToggleInput.addEventListener('change', () => {
+        const enabled = formulaToggleInput.checked;
+        setFormulaCopyEnabled(enabled);
+        formulaBtn.classList.toggle('active', enabled);
+    });
+
+    formulaPanel.querySelectorAll('input[name="gpt-formula-format"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            setFormulaCopyFormat(e.target.value);
+        });
+    });
+
+    // 点击面板外部时关闭面板
+    document.addEventListener('click', (event) => {
+        if (formulaPanel.classList.contains('hidden')) return;
+        if (formulaPanel.contains(event.target) || formulaBtn.contains(event.target)) return;
+        formulaPanel.classList.add('hidden');
+    });
+
     // === Event Listeners ===
 
     toggleBtn.addEventListener('click', (event) => {

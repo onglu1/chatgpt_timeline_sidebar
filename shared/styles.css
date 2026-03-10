@@ -347,3 +347,190 @@ body.dark-theme {
 .gpt-outline-resize-btn:active {
     transform: scale(0.9);
 }
+
+/* ===== 公式复制设置面板 ===== */
+#gpt-formula-panel {
+    position: fixed;
+    z-index: 100001;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--sidebar-shadow);
+    padding: 16px;
+    min-width: 200px;
+    backdrop-filter: blur(12px);
+}
+
+#gpt-formula-panel.hidden {
+    display: none;
+}
+
+.gpt-formula-panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--prompt-text-color);
+    margin-bottom: 12px;
+}
+
+.gpt-formula-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.gpt-formula-label {
+    font-size: 13px;
+    color: var(--prompt-text-color);
+}
+
+/* 开关组件 */
+.gpt-formula-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.gpt-formula-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.gpt-formula-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--scrollbar-thumb);
+    border-radius: 20px;
+    transition: background-color 0.25s ease;
+}
+
+.gpt-formula-slider::before {
+    content: "";
+    position: absolute;
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    transition: transform 0.25s ease;
+}
+
+.gpt-formula-switch input:checked + .gpt-formula-slider {
+    background-color: #3b82f6;
+}
+
+.gpt-formula-switch input:checked + .gpt-formula-slider::before {
+    transform: translateX(16px);
+}
+
+.gpt-formula-divider {
+    height: 1px;
+    background: var(--sidebar-border);
+    margin: 12px 0;
+}
+
+.gpt-formula-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--title-color);
+    margin-bottom: 8px;
+}
+
+.gpt-formula-format-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.gpt-formula-format-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--prompt-text-color);
+    transition: background-color 0.15s ease;
+}
+
+.gpt-formula-format-option:hover {
+    background-color: var(--card-hover-bg);
+}
+
+.gpt-formula-format-option input[type="radio"] {
+    accent-color: #3b82f6;
+    margin: 0;
+    cursor: pointer;
+}
+
+.gpt-formula-hint {
+    font-size: 11px;
+    color: var(--title-color);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+/* ===== 公式悬浮效果（仅在公式复制启用时生效） ===== */
+html.gpt-formula-copy-active .katex,
+html.gpt-formula-copy-active .katex-display,
+html.gpt-formula-copy-active [data-math],
+html.gpt-formula-copy-active .math-inline,
+html.gpt-formula-copy-active .math-block,
+html.gpt-formula-copy-active .MathJax,
+html.gpt-formula-copy-active .MathJax_Display {
+    cursor: pointer !important;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 4px;
+}
+
+html.gpt-formula-copy-active .katex:hover,
+html.gpt-formula-copy-active .katex-display:hover,
+html.gpt-formula-copy-active [data-math]:hover,
+html.gpt-formula-copy-active .math-inline:hover,
+html.gpt-formula-copy-active .math-block:hover,
+html.gpt-formula-copy-active .MathJax:hover,
+html.gpt-formula-copy-active .MathJax_Display:hover {
+    background-color: rgba(59, 130, 246, 0.1) !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* ===== 公式复制 Toast 提示 ===== */
+.formula-copy-toast {
+    position: fixed;
+    color: #ffffff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 200000;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-8px) scale(0.92);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.formula-toast-success {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    box-shadow: 0 2px 10px rgba(34, 197, 94, 0.3);
+}
+
+.formula-toast-error {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 2px 10px rgba(239, 68, 68, 0.3);
+}
+
+.formula-toast-show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}

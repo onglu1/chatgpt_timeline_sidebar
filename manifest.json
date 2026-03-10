@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "LLM_Chat_Navigator",
-    "version": "1.2",
+    "version": "1.3",
     "description": "大模型对话导航增强插件，针对模型生成超长回答的场景，提供侧边栏、大纲与快速跳转",
     "browser_specific_settings": {
         "gecko": {
@@ -20,6 +20,7 @@
             "js": [
                 "shared/utils.js",
                 "shared/ui.js",
+                "shared/formula-copy.js",
                 "portals/chatgpt/adapter.js",
                 "shared/main.js"
             ]
@@ -34,6 +35,7 @@
             "js": [
                 "shared/utils.js",
                 "shared/ui.js",
+                "shared/formula-copy.js",
                 "portals/gemini/adapter.js",
                 "shared/main.js"
             ]
