@@ -300,26 +300,6 @@ body.dark-theme {
     color: var(--outline-level0-color);
 }
 
-#gpt-outline-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 6px;
-}
-
-.gpt-outline-ctrl-row {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.gpt-outline-ctrl-label {
-    font-size: 11px;
-    color: var(--outline-resize-color);
-    white-space: nowrap;
-    min-width: 28px;
-}
-
 .gpt-outline-resize-btn {
     width: 22px;
     height: 22px;
@@ -346,6 +326,93 @@ body.dark-theme {
 
 .gpt-outline-resize-btn:active {
     transform: scale(0.9);
+}
+
+/* ===== 大纲设置面板 ===== */
+#gpt-outline-settings {
+    position: fixed;
+    z-index: 100001;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--sidebar-border);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px var(--sidebar-shadow);
+    padding: 16px;
+    min-width: 200px;
+    backdrop-filter: blur(12px);
+}
+
+#gpt-outline-settings.hidden {
+    display: none;
+}
+
+/* ===== 大纲自动折叠 ===== */
+#gpt-outline-panel.auto-collapse {
+    opacity: 0.6;
+    padding: 4px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: opacity 0.3s ease, background-color 0.3s ease,
+                box-shadow 0.3s ease, padding 0.3s ease,
+                border-color 0.3s ease;
+}
+
+#gpt-outline-panel.auto-collapse #gpt-outline-list {
+    transition: width 0.3s ease;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) #gpt-outline-list {
+    width: 32px !important;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-item {
+    font-size: 0;
+    line-height: 0;
+    padding: 3px 4px !important;
+    border-left: none;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-item::after {
+    content: '';
+    display: block;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--outline-item-color);
+    opacity: 0.6;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-level-0::after {
+    width: 24px;
+    opacity: 0.9;
+    background: var(--outline-level0-color);
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-level-1::after {
+    width: 20px;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-level-2::after {
+    width: 16px;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-level-3::after {
+    width: 12px;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-level-4::after {
+    width: 8px;
+}
+
+#gpt-outline-panel.auto-collapse:not(:hover) .gpt-outline-level-5::after {
+    width: 6px;
+}
+
+#gpt-outline-panel.auto-collapse:hover {
+    opacity: 1;
+    background: var(--sidebar-bg);
+    border-color: var(--sidebar-border);
+    box-shadow: 0 4px 20px var(--sidebar-shadow);
+    padding: 12px 8px;
+    backdrop-filter: blur(12px);
 }
 
 /* ===== 公式复制设置面板 ===== */

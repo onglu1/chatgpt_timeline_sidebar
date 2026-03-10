@@ -46,7 +46,7 @@ downBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 const outlineToggleBtn = document.createElement('button');
 outlineToggleBtn.className = 'gpt-float-btn active';
 outlineToggleBtn.id = 'gpt-outline-toggle';
-outlineToggleBtn.title = '显示/隐藏大纲';
+outlineToggleBtn.title = '大纲设置';
 outlineToggleBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>`;
 
 const formulaBtn = document.createElement('button');
@@ -69,14 +69,7 @@ const outlineList = document.createElement('div');
 outlineList.id = 'gpt-outline-list';
 outlinePanel.appendChild(outlineList);
 
-const outlineControls = document.createElement('div');
-outlineControls.id = 'gpt-outline-controls';
-
-const widthRow = document.createElement('div');
-widthRow.className = 'gpt-outline-ctrl-row';
-const widthLabel = document.createElement('span');
-widthLabel.className = 'gpt-outline-ctrl-label';
-widthLabel.textContent = '宽度:';
+// 大纲宽度/层级调整按钮（将放入设置面板）
 const outlineShrink = document.createElement('button');
 outlineShrink.className = 'gpt-outline-resize-btn';
 outlineShrink.title = '缩小大纲';
@@ -85,15 +78,6 @@ const outlineGrow = document.createElement('button');
 outlineGrow.className = 'gpt-outline-resize-btn';
 outlineGrow.title = '放大大纲';
 outlineGrow.textContent = '+';
-widthRow.appendChild(widthLabel);
-widthRow.appendChild(outlineShrink);
-widthRow.appendChild(outlineGrow);
-
-const levelRow = document.createElement('div');
-levelRow.className = 'gpt-outline-ctrl-row';
-const levelLabel = document.createElement('span');
-levelLabel.className = 'gpt-outline-ctrl-label';
-levelLabel.textContent = '层级:';
 const levelShrink = document.createElement('button');
 levelShrink.className = 'gpt-outline-resize-btn';
 levelShrink.title = '减少显示层级';
@@ -102,13 +86,90 @@ const levelGrow = document.createElement('button');
 levelGrow.className = 'gpt-outline-resize-btn';
 levelGrow.title = '增加显示层级';
 levelGrow.textContent = '+';
-levelRow.appendChild(levelLabel);
-levelRow.appendChild(levelShrink);
-levelRow.appendChild(levelGrow);
 
-outlineControls.appendChild(widthRow);
-outlineControls.appendChild(levelRow);
-outlinePanel.appendChild(outlineControls);
+// ===== 大纲设置面板 =====
+
+const outlineSettingsPanel = document.createElement('div');
+outlineSettingsPanel.id = 'gpt-outline-settings';
+outlineSettingsPanel.className = 'hidden';
+
+const outlineSettingsTitle = document.createElement('div');
+outlineSettingsTitle.className = 'gpt-formula-panel-title';
+outlineSettingsTitle.textContent = 'Outline';
+outlineSettingsPanel.appendChild(outlineSettingsTitle);
+
+// 显示大纲 开关
+const outlineEnableRow = document.createElement('div');
+outlineEnableRow.className = 'gpt-formula-row';
+const outlineEnableLabel = document.createElement('span');
+outlineEnableLabel.className = 'gpt-formula-label';
+outlineEnableLabel.textContent = '显示大纲';
+const outlineEnableToggle = document.createElement('label');
+outlineEnableToggle.className = 'gpt-formula-switch';
+const outlineEnableInput = document.createElement('input');
+outlineEnableInput.type = 'checkbox';
+outlineEnableInput.id = 'gpt-outline-enabled';
+const outlineEnableSlider = document.createElement('span');
+outlineEnableSlider.className = 'gpt-formula-slider';
+outlineEnableToggle.appendChild(outlineEnableInput);
+outlineEnableToggle.appendChild(outlineEnableSlider);
+outlineEnableRow.appendChild(outlineEnableLabel);
+outlineEnableRow.appendChild(outlineEnableToggle);
+outlineSettingsPanel.appendChild(outlineEnableRow);
+
+// 宽度控制行
+const settingsWidthRow = document.createElement('div');
+settingsWidthRow.className = 'gpt-formula-row';
+settingsWidthRow.style.marginTop = '8px';
+const settingsWidthLabel = document.createElement('span');
+settingsWidthLabel.className = 'gpt-formula-label';
+settingsWidthLabel.textContent = '宽度';
+const settingsWidthBtns = document.createElement('div');
+settingsWidthBtns.style.cssText = 'display:flex;gap:4px';
+settingsWidthBtns.appendChild(outlineShrink);
+settingsWidthBtns.appendChild(outlineGrow);
+settingsWidthRow.appendChild(settingsWidthLabel);
+settingsWidthRow.appendChild(settingsWidthBtns);
+outlineSettingsPanel.appendChild(settingsWidthRow);
+
+// 层级控制行
+const settingsLevelRow = document.createElement('div');
+settingsLevelRow.className = 'gpt-formula-row';
+settingsLevelRow.style.marginTop = '4px';
+const settingsLevelLabel = document.createElement('span');
+settingsLevelLabel.className = 'gpt-formula-label';
+settingsLevelLabel.textContent = '层级';
+const settingsLevelBtns = document.createElement('div');
+settingsLevelBtns.style.cssText = 'display:flex;gap:4px';
+settingsLevelBtns.appendChild(levelShrink);
+settingsLevelBtns.appendChild(levelGrow);
+settingsLevelRow.appendChild(settingsLevelLabel);
+settingsLevelRow.appendChild(settingsLevelBtns);
+outlineSettingsPanel.appendChild(settingsLevelRow);
+
+// 分隔线
+const outlineSettingsDivider = document.createElement('div');
+outlineSettingsDivider.className = 'gpt-formula-divider';
+outlineSettingsPanel.appendChild(outlineSettingsDivider);
+
+// 自动折叠 开关
+const autoCollapseRow = document.createElement('div');
+autoCollapseRow.className = 'gpt-formula-row';
+const autoCollapseLabel = document.createElement('span');
+autoCollapseLabel.className = 'gpt-formula-label';
+autoCollapseLabel.textContent = '自动折叠';
+const autoCollapseToggle = document.createElement('label');
+autoCollapseToggle.className = 'gpt-formula-switch';
+const autoCollapseInput = document.createElement('input');
+autoCollapseInput.type = 'checkbox';
+autoCollapseInput.id = 'gpt-outline-auto-collapse';
+const autoCollapseSlider = document.createElement('span');
+autoCollapseSlider.className = 'gpt-formula-slider';
+autoCollapseToggle.appendChild(autoCollapseInput);
+autoCollapseToggle.appendChild(autoCollapseSlider);
+autoCollapseRow.appendChild(autoCollapseLabel);
+autoCollapseRow.appendChild(autoCollapseToggle);
+outlineSettingsPanel.appendChild(autoCollapseRow);
 
 // ===== 公式复制设置面板 =====
 
@@ -186,6 +247,7 @@ formulaPanel.appendChild(formulaHint);
 document.body.appendChild(sidebar);
 document.body.appendChild(floatControls);
 document.body.appendChild(outlinePanel);
+document.body.appendChild(outlineSettingsPanel);
 document.body.appendChild(formulaPanel);
 
 let outlineVisible = true;
@@ -199,3 +261,6 @@ const OUTLINE_LEVEL_MIN = 0;
 const OUTLINE_LEVEL_MAX = 5;
 let _outlineMaxLevel = parseInt(localStorage.getItem(OUTLINE_LEVEL_KEY));
 if (isNaN(_outlineMaxLevel)) _outlineMaxLevel = OUTLINE_LEVEL_MAX;
+
+const OUTLINE_AUTO_COLLAPSE_KEY = 'gpt-outline-auto-collapse';
+let _outlineAutoCollapse = localStorage.getItem(OUTLINE_AUTO_COLLAPSE_KEY) === 'true';

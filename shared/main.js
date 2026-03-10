@@ -27,6 +27,7 @@
         event.stopPropagation();
         const isHidden = formulaPanel.classList.contains('hidden');
         if (isHidden) {
+            outlineSettingsPanel.classList.add('hidden');
             const btnRect = formulaBtn.getBoundingClientRect();
             formulaPanel.style.top = `${btnRect.top - 40}px`;
             formulaPanel.style.right = `${window.innerWidth - btnRect.left + 12}px`;
@@ -50,9 +51,16 @@
 
     // 点击面板外部时关闭面板
     document.addEventListener('click', (event) => {
-        if (formulaPanel.classList.contains('hidden')) return;
-        if (formulaPanel.contains(event.target) || formulaBtn.contains(event.target)) return;
-        formulaPanel.classList.add('hidden');
+        if (!formulaPanel.classList.contains('hidden')) {
+            if (!formulaPanel.contains(event.target) && !formulaBtn.contains(event.target)) {
+                formulaPanel.classList.add('hidden');
+            }
+        }
+        if (!outlineSettingsPanel.classList.contains('hidden')) {
+            if (!outlineSettingsPanel.contains(event.target) && !outlineToggleBtn.contains(event.target)) {
+                outlineSettingsPanel.classList.add('hidden');
+            }
+        }
     });
 
     // === Event Listeners ===
@@ -68,15 +76,42 @@
         })();
     });
 
+    // === 大纲设置面板初始化 ===
+
+    outlineEnableInput.checked = outlineVisible;
+    autoCollapseInput.checked = _outlineAutoCollapse;
+    if (_outlineAutoCollapse) {
+        outlinePanel.classList.add('auto-collapse');
+    }
+
     outlineToggleBtn.addEventListener('click', (event) => {
         event.stopPropagation();
-        outlineVisible = !outlineVisible;
+        const isHidden = outlineSettingsPanel.classList.contains('hidden');
+        if (isHidden) {
+            formulaPanel.classList.add('hidden');
+            const btnRect = outlineToggleBtn.getBoundingClientRect();
+            outlineSettingsPanel.style.top = `${btnRect.top - 40}px`;
+            outlineSettingsPanel.style.right = `${window.innerWidth - btnRect.left + 12}px`;
+            outlineSettingsPanel.classList.remove('hidden');
+        } else {
+            outlineSettingsPanel.classList.add('hidden');
+        }
+    });
+
+    outlineEnableInput.addEventListener('change', () => {
+        outlineVisible = outlineEnableInput.checked;
         outlineToggleBtn.classList.toggle('active', outlineVisible);
         if (!outlineVisible) {
             outlinePanel.classList.add('hidden');
         } else {
             updateOutline();
         }
+    });
+
+    autoCollapseInput.addEventListener('change', () => {
+        _outlineAutoCollapse = autoCollapseInput.checked;
+        localStorage.setItem(OUTLINE_AUTO_COLLAPSE_KEY, String(_outlineAutoCollapse));
+        outlinePanel.classList.toggle('auto-collapse', _outlineAutoCollapse);
     });
 
     outlineShrink.addEventListener('click', (e) => {
